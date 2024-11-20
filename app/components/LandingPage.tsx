@@ -19,6 +19,7 @@ const formSchema = z.object({
 });
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+console.log("Api base url::", API_BASE_URL);
 
 // create payment
 export const createPayment = async (
