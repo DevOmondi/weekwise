@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { BrainCog, Handshake, Target } from "lucide-react";
 import SuccessToast from "@/components/SuccessToast";
+import AnimatedLoaderOverlay from "@/components/animated-loader";
 
 // Define Zod schema for validation
 const formSchema = z.object({
@@ -19,7 +20,6 @@ const formSchema = z.object({
 });
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-console.log("Api base url::", API_BASE_URL);
 
 // create payment
 export const createPayment = async (
@@ -74,6 +74,7 @@ const LandingPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [toastIsOpen, setToastIsOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleValidation = () => {
     const result = formSchema.safeParse(formData);
@@ -102,6 +103,7 @@ const LandingPage = () => {
 
     if (handleValidation()) {
       console.log("Form data is valid:", formData);
+      setIsLoading(true);
       try {
         const response = await axios.post(`${API_BASE_URL}/api/model/achieve`, {
           prompt: formData.goal,
@@ -109,10 +111,12 @@ const LandingPage = () => {
           userEmail: formData.email,
         });
         if (response.data.success === true) {
+          setIsLoading(false);
           setToastIsOpen(true);
         }
         console.log("Goal processed::", response.data.success);
       } catch (error) {
+        setIsLoading(false);
         console.log("Error generating message::", error);
         throw error;
       }
@@ -127,6 +131,7 @@ const LandingPage = () => {
         currency: "USD",
       }}
     >
+      <AnimatedLoaderOverlay isLoading={isLoading}/>
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white px-4 py-12">
         <SuccessToast
           message="Check your email shortly 😊"
@@ -182,6 +187,7 @@ const LandingPage = () => {
 
           {/* Main Card */}
           <Card className="shadow-lg">
+           
             <CardContent className="p-6 space-y-6">
               {/* Example Message Preview */}
               <div className="bg-gray-50 p-4 rounded-lg text-sm">
@@ -319,13 +325,14 @@ Examples:
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 onApprove={async (data, actions) => {
                   try {
+                    console.log("Order id::", data.orderID);
                     const { capture } = await capturePayment(data.orderID);
                     console.log("Payment successful:", capture);
                     setPaymentSuccess(true);
                     alert("Payment successful!");
                   } catch (error) {
                     console.error("Error capturing payment:", error);
-                    alert("Failed to capture payment. Please try again.");
+                    // alert("Failed to capture payment. Please try again.");
                   }
                 }}
                 onError={(err) => {
