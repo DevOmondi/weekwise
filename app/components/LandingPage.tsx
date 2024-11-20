@@ -256,7 +256,7 @@ Examples:
                   className="w-full h-12 text-lg font-medium"
                   type="submit"
                 >
-                  Give it a shot
+                  Test it out
                 </Button>
                 {/* Pricing */}
                 <div className="flex justify-between items-center bg-blue-50 p-4 rounded-lg">
