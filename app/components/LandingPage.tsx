@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { z } from "zod";
 import axios from "axios";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
@@ -20,6 +21,27 @@ const formSchema = z.object({
 });
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+// Modal Component
+const Modal = ({
+  title,
+  message,
+  onClose,
+}: {
+  title: string;
+  message: string;
+  onClose: () => void;
+}) => (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div className="bg-red-100 p-6 rounded-lg max-w-md w-full">
+      <h2 className="text-lg font-bold mb-4">{title}</h2>
+      <p className="text-gray-600 mb-6">{message}</p>
+      <Button variant="outline" onClick={onClose} className="w-full">
+        Close
+      </Button>
+    </div>
+  </div>
+);
 
 // create payment
 export const createPayment = async (
@@ -59,6 +81,7 @@ export const capturePayment = async (orderId: string) => {
   }
 };
 const LandingPage = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
     name: "",
@@ -71,10 +94,17 @@ const LandingPage = () => {
     goal: "",
   });
 
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [toastIsOpen, setToastIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [modalContent, setModalContent] = useState<{
+    title: string;
+    message: string;
+  }>({
+    title: "",
+    message: "",
+  });
 
   const handleValidation = () => {
     const result = formSchema.safeParse(formData);
@@ -105,20 +135,40 @@ const LandingPage = () => {
       console.log("Form data is valid:", formData);
       setIsLoading(true);
       try {
-        const response = await axios.post(`${API_BASE_URL}/api/model/achieve`, {
-          prompt: formData.goal,
-          userName: formData.name,
-          userEmail: formData.email,
-        });
+        const response = await axios.post(
+          `${API_BASE_URL}/api/model/register`,
+          {
+            prompt: formData.goal,
+            userName: formData.name,
+            userEmail: formData.email,
+          }
+        );
         if (response.data.success === true) {
           setIsLoading(false);
           setToastIsOpen(true);
-        }
+        } 
+        // else if (
+        //   response.data.message === "A user with this email already exists."
+        // ) {
+        //   setModalContent({
+        //     title: "Error",
+        //     message: response.data.message || "Please use another email :(",
+        //   });
+        //   setIsErrorModalOpen(true);
+        // }
         console.log("Goal processed::", response.data.success);
+        if (response.status === 400) {
+          return alert(response.data.message);
+        }
       } catch (error) {
         setIsLoading(false);
+        setModalContent({
+          title: "Error",
+          message: "Please use another email :(",
+        });
+        setIsErrorModalOpen(true);
         console.log("Error generating message::", error);
-        throw error;
+        // throw error;
       }
     }
   };
@@ -131,7 +181,7 @@ const LandingPage = () => {
         currency: "USD",
       }}
     >
-      <AnimatedLoaderOverlay isLoading={isLoading}/>
+      <AnimatedLoaderOverlay isLoading={isLoading} />
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white px-4 py-12">
         <SuccessToast
           message="Check your email shortly 😊"
@@ -187,7 +237,6 @@ const LandingPage = () => {
 
           {/* Main Card */}
           <Card className="shadow-lg">
-           
             <CardContent className="p-6 space-y-6">
               {/* Example Message Preview */}
               <div className="bg-gray-50 p-4 rounded-lg text-sm">
@@ -327,12 +376,15 @@ Examples:
                   try {
                     console.log("Order id::", data.orderID);
                     const { capture } = await capturePayment(data.orderID);
-                    console.log("Payment successful:", capture);
-                    setPaymentSuccess(true);
-                    alert("Payment successful!");
+                    // console.log("Payment successful:", capture);
+                    const dateTime = capture.dateTime;
+                    router.push(
+                      `/success?dateTime=${encodeURIComponent(dateTime)}`
+                    );
+                    // alert("Payment successful!");
                   } catch (error) {
                     console.error("Error capturing payment:", error);
-                    // alert("Failed to capture payment. Please try again.");
+                    alert("Failed to capture payment. Please try again.");
                   }
                 }}
                 onError={(err) => {
@@ -350,12 +402,13 @@ Examples:
             </div>
           </div>
         )}
-
-        {/* Payment Success Message */}
-        {paymentSuccess && (
-          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white py-2 px-4 rounded-lg">
-            Payment Successful! Welcome aboard 🎉
-          </div>
+        {/* Error Modal */}
+        {isErrorModalOpen && (
+          <Modal
+            title={modalContent.title}
+            message={modalContent.message}
+            onClose={() => setIsErrorModalOpen(false)}
+          />
         )}
       </div>
     </PayPalScriptProvider>
