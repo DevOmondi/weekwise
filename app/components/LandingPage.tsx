@@ -156,7 +156,7 @@ const LandingPage = () => {
         //   });
         //   setIsErrorModalOpen(true);
         // }
-        console.log("Goal processed::", response.data.success);
+        // console.log("Goal processed::", response.data.success);
         if (response.status === 400) {
           return alert(response.data.message);
         }
