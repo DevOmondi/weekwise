@@ -312,7 +312,7 @@ Examples:
                   <div>
                     <div className="font-medium">365 Days of Coaching</div>
                     <div className="text-sm text-gray-600">
-                      First message this Sunday
+                      First Message one week after you subscribe 😊
                     </div>
                   </div>
                   <div className="text-right">
@@ -330,15 +330,15 @@ Examples:
                 {/* Stats */}
                 <div className="grid grid-cols-3 gap-4 pt-2 text-center text-sm">
                   <div>
-                    <div className="font-medium">4.9/5</div>
+                    <div className="font-medium">4/5</div>
                     <div className="text-gray-600">User Rating</div>
                   </div>
                   <div>
-                    <div className="font-medium">10k+</div>
+                    <div className="font-medium">1k+</div>
                     <div className="text-gray-600">Active Users</div>
                   </div>
                   <div>
-                    <div className="font-medium">500k+</div>
+                    <div className="font-medium">500+</div>
                     <div className="text-gray-600">Messages Sent</div>
                   </div>
                 </div>
