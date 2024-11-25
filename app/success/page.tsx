@@ -1,6 +1,6 @@
 "use client";
 
-// import React, { Suspense } from "react";
+import React, { Suspense } from "react";
 import Navbar from "./components/Navbar";
 import { useSearchParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
@@ -89,11 +89,9 @@ function SuccessContent() {
 
 export default function SuccessPage() {
   return (
-    // <Suspense fallback={<div>Loading...</div>}>
-    <>
+    <Suspense fallback={<div>Loading...</div>}>
       <Navbar />
       <SuccessContent />
-    </>
-    // </Suspense>
+    </Suspense>
   );
 }
