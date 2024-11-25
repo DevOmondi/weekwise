@@ -200,7 +200,7 @@ const LandingPage = () => {
               Your Personal AI Coach
             </h1>
             <p className="text-xl text-gray-600">
-              Weekly guidance to achieve your goals, delivered every Sunday for
+              Guidance to achieve your goals, delivered every week for
               an entire year.
             </p>
           </div>

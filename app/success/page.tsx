@@ -1,6 +1,7 @@
 "use client";
 
-import React, { Suspense } from "react";
+// import React, { Suspense } from "react";
+import Navbar from "./components/Navbar";
 import { useSearchParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Calendar, Sparkles } from "lucide-react";
@@ -78,7 +79,7 @@ function SuccessContent() {
 
           {/* Support Info */}
           <div className="text-sm text-gray-500">
-            Questions? Email help@weekwise.me
+            Questions? Email you@weekwise.me
           </div>
         </CardContent>
       </Card>
@@ -88,8 +89,11 @@ function SuccessContent() {
 
 export default function SuccessPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    // <Suspense fallback={<div>Loading...</div>}>
+    <>
+      <Navbar />
       <SuccessContent />
-    </Suspense>
+    </>
+    // </Suspense>
   );
 }
