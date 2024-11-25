@@ -110,7 +110,6 @@ const LandingPage = () => {
     const result = formSchema.safeParse(formData);
 
     if (!result.success) {
-      // Map errors to their respective fields
       const fieldErrors: { email: string; name: string; goal: string } = {
         email: "",
         name: "",
@@ -146,17 +145,14 @@ const LandingPage = () => {
         if (response.data.success === true) {
           setIsLoading(false);
           setToastIsOpen(true);
-        } 
-        // else if (
-        //   response.data.message === "A user with this email already exists."
-        // ) {
-        //   setModalContent({
-        //     title: "Error",
-        //     message: response.data.message || "Please use another email :(",
-        //   });
-        //   setIsErrorModalOpen(true);
-        // }
-        // console.log("Goal processed::", response.data.success);
+        } else if (response.data.success === false) {
+          setModalContent({
+            title: "Error",
+            message: response.data.message || "Please use another email :(",
+          });
+          setIsErrorModalOpen(true);
+        }
+        console.log("Goal processed::", response.data.success);
         if (response.status === 400) {
           return alert(response.data.message);
         }
@@ -164,7 +160,8 @@ const LandingPage = () => {
         setIsLoading(false);
         setModalContent({
           title: "Error",
-          message: "Please use another email :(",
+          message:
+            "Sorry, an error occured while processing your request. Please try again or use a different email :(",
         });
         setIsErrorModalOpen(true);
         console.log("Error generating message::", error);
@@ -352,53 +349,55 @@ Examples:
 
         {/* PayPal Payment Modal */}
         {isModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white p-6 rounded-lg max-w-md w-full">
-              <h2 className="text-lg font-bold mb-4">
-                Complete Your Payment with PayPal
-              </h2>
-              <PayPalButtons
-                createOrder={async () => {
-                  try {
-                    const { orderId } = await createPayment(
-                      9,
-                      "USD",
-                      "365 Days of Coaching"
-                    );
-                    return orderId;
-                  } catch (error) {
-                    console.error("Error creating order:", error);
-                    alert("Failed to create order. Please try again.");
-                  }
-                }}
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                onApprove={async (data, actions) => {
-                  try {
-                    console.log("Order id::", data.orderID);
-                    const { capture } = await capturePayment(data.orderID);
-                    // console.log("Payment successful:", capture);
-                    const dateTime = capture.dateTime;
-                    router.push(
-                      `/success?dateTime=${encodeURIComponent(dateTime)}`
-                    );
-                    // alert("Payment successful!");
-                  } catch (error) {
-                    console.error("Error capturing payment:", error);
-                    alert("Failed to capture payment. Please try again.");
-                  }
-                }}
-                onError={(err) => {
-                  console.error("PayPal Button error:", err);
-                  alert("Something went wrong. Please try again.");
-                }}
-              />
-              <Button
-                variant="outline"
-                onClick={() => setIsModalOpen(false)}
-                className="mt-4 w-full"
-              >
-                Cancel
-              </Button>
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start z-50  p-4">
+            <div className="bg-white p-6 rounded-lg max-w-md w-full my-8 mx-auto relative">
+              <div className="max-h-[80vh] overflow-y-auto">
+                <h2 className="text-lg font-bold mb-4">
+                  Complete Your Payment with PayPal
+                </h2>
+                <PayPalButtons
+                  createOrder={async () => {
+                    try {
+                      const { orderId } = await createPayment(
+                        9,
+                        "USD",
+                        "365 Days of Coaching"
+                      );
+                      return orderId;
+                    } catch (error) {
+                      console.error("Error creating order:", error);
+                      alert("Failed to create order. Please try again.");
+                    }
+                  }}
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                  onApprove={async (data, actions) => {
+                    try {
+                      console.log("Order id::", data.orderID);
+                      const { capture } = await capturePayment(data.orderID);
+                      // console.log("Payment successful:", capture);
+                      const dateTime = capture.dateTime;
+                      router.push(
+                        `/success?dateTime=${encodeURIComponent(dateTime)}`
+                      );
+                      // alert("Payment successful!");
+                    } catch (error) {
+                      console.error("Error capturing payment:", error);
+                      alert("Failed to capture payment. Please try again.");
+                    }
+                  }}
+                  onError={(err) => {
+                    console.error("PayPal Button error:", err);
+                    alert("Something went wrong. Please try again.");
+                  }}
+                />
+                <Button
+                  variant="outline"
+                  onClick={() => setIsModalOpen(false)}
+                  className="mt-4 w-full"
+                >
+                  Cancel
+                </Button>
+              </div>
             </div>
           </div>
         )}
