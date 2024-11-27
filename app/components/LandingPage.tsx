@@ -22,6 +22,8 @@ const formSchema = z.object({
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+const randomNumber = Math.floor(Math.random() * (200 - 100 + 1)) + 100;
+
 // Modal Component
 const Modal = ({
   title,
@@ -189,7 +191,7 @@ const LandingPage = () => {
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-white/90 backdrop-blur-sm py-2 px-4 rounded-full shadow-sm border text-sm z-50">
           <span className="flex items-center gap-2">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            247 people working on their goals right now
+            {randomNumber} people working on their goals right now
           </span>
         </div>
 
@@ -200,8 +202,8 @@ const LandingPage = () => {
               Your Personal AI Coach
             </h1>
             <p className="text-xl text-gray-600">
-              Guidance to achieve your goals, delivered every week for
-              an entire year.
+              Guidance to achieve your goals, delivered every week for an entire
+              year.
             </p>
           </div>
 
@@ -242,10 +244,10 @@ const LandingPage = () => {
                 your first marathon - you &apos;re already thinking like a
                 runner. This week, let&apos;s focus on one small but mighty
                 habit. Try this: Before each run, take 30 seconds to visualize
-                yourself finishing strong. 127 other weekwise.me members are
-                working on running goals, and many find this mental prep
-                transformative. You&apos;re building something special here.
-                Your coach
+                yourself finishing strong. {randomNumber} other weekwise.me
+                members are working on running goals, and many find this mental
+                prep transformative. You&apos;re building something special
+                here. Your coach
               </div>
               <form className="space-y-4" onSubmit={handleSubmit}>
                 <div>
@@ -324,24 +326,6 @@ Examples:
                 >
                   Start Your Journey
                 </Button>
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-4 pt-2 text-center text-sm">
-                  <div>
-                    <div className="font-medium">4/5</div>
-                    <div className="text-gray-600">User Rating</div>
-                  </div>
-                  <div>
-                    <div className="font-medium">1k+</div>
-                    <div className="text-gray-600">Active Users</div>
-                  </div>
-                  <div>
-                    <div className="font-medium">500+</div>
-                    <div className="text-gray-600">Messages Sent</div>
-                  </div>
-                </div>
-                <div className="text-xs text-center text-gray-500">
-                  ✨ Money-back guarantee • Cancel anytime • 24/7 support
-                </div>
               </form>
             </CardContent>
           </Card>
