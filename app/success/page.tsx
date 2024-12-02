@@ -14,9 +14,7 @@ function SuccessContent() {
   const dateObj = dateTime ? new Date(dateTime) : null;
   const formattedDate = dateObj
     ? dateObj.toLocaleDateString(undefined, {
-        weekday: "long",
-        month: "long",
-        day: "numeric",
+        weekday: "long"
       })
     : null;
   const formattedTime = dateObj
@@ -53,8 +51,8 @@ function SuccessContent() {
               <li className="flex items-start gap-2">
                 <div className="min-w-4 min-h-4 rounded-full bg-green-500 mt-1"></div>
                 <span>
-                  Your first coaching message will arrive on {formattedDate} at{" "}
-                  {formattedTime} your local time.
+                  Your first coaching message will arrive tomorrow at{" "}
+                  {formattedTime}.
                 </span>
               </li>
               <li className="flex items-start gap-2">

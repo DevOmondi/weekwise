@@ -68,12 +68,16 @@ export const createPayment = async (
 };
 
 // Capture payment
-export const capturePayment = async (orderId: string) => {
+export const capturePayment = async (
+  orderId: string,
+  formData: { email: string; name: string; goal: string }
+) => {
   try {
     const response = await axios.post(
       `${API_BASE_URL}/api/payment/capture-payment`,
       {
         orderId,
+        formData,
       }
     );
     return response.data;
@@ -137,7 +141,7 @@ const LandingPage = () => {
       setIsLoading(true);
       try {
         const response = await axios.post(
-          `${API_BASE_URL}/api/model/register`,
+          `${API_BASE_URL}/api/test/test-email`,
           {
             prompt: formData.goal,
             userName: formData.name,
@@ -146,6 +150,11 @@ const LandingPage = () => {
         );
         if (response.data.success === true) {
           setIsLoading(false);
+          setFormData({
+            email: "",
+            name: "",
+            goal: "",
+          });
           setToastIsOpen(true);
         } else if (response.data.success === false) {
           setModalContent({
@@ -169,6 +178,15 @@ const LandingPage = () => {
         console.log("Error generating message::", error);
         // throw error;
       }
+    }
+  };
+
+  const handleStartJourney = () => {
+    if (handleValidation()) {
+      console.log("All required fields are filled::", formData);
+      setIsModalOpen(true);
+    } else {
+      alert("Please fill in all the fields to start your journey");
     }
   };
 
@@ -311,7 +329,7 @@ Examples:
                   <div>
                     <div className="font-medium">365 Days of Coaching</div>
                     <div className="text-sm text-gray-600">
-                      First Message one week after you subscribe 😊
+                      First Message one day after you subscribe 😊
                     </div>
                   </div>
                   <div className="text-right">
@@ -322,7 +340,7 @@ Examples:
                 <Button
                   className="w-full h-12 text-lg font-medium"
                   type="button"
-                  onClick={() => setIsModalOpen(true)}
+                  onClick={handleStartJourney}
                 >
                   Start Your Journey
                 </Button>
@@ -357,9 +375,12 @@ Examples:
                   onApprove={async (data, actions) => {
                     try {
                       console.log("Order id::", data.orderID);
-                      const { capture } = await capturePayment(data.orderID);
+                      const { capture } = await capturePayment(
+                        data.orderID,
+                        formData
+                      );
                       // console.log("Payment successful:", capture);
-                      const dateTime = capture.dateTime;
+                      const dateTime = capture.nextMessageDate;
                       router.push(
                         `/success?dateTime=${encodeURIComponent(dateTime)}`
                       );
