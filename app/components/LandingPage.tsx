@@ -361,7 +361,7 @@ Examples:
                   createOrder={async () => {
                     try {
                       const { orderId } = await createPayment(
-                        9,
+                        2,
                         "USD",
                         "365 Days of Coaching"
                       );
