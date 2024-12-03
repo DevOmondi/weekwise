@@ -8,7 +8,7 @@ export default function AnalyticsProvider() {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('config', 'G-LSLJ3KVQGY', {
+      window.gtag('config', 'G-VDLSXM85G5', {
         page_path: pathname,
       });
     }

@@ -21,6 +21,7 @@ const formSchema = z.object({
 });
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const PLAN_ID = process.env.NEXT_PUBLIC_PAYPAL_PLAN_ID;
 
 const randomNumber = Math.floor(Math.random() * (200 - 100 + 1)) + 100;
 
@@ -45,49 +46,29 @@ const Modal = ({
   </div>
 );
 
-// create payment
-export const createPayment = async (
-  amount: number,
-  currency: string,
-  description: string
-) => {
-  try {
-    const response = await axios.post(
-      `${API_BASE_URL}/api/payment/create-payment`,
-      {
-        amount,
-        currency,
-        description,
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error creating payment:", error);
-    throw error;
-  }
-};
-
-// Capture payment
-export const capturePayment = async (
-  orderId: string,
+// Handle subscription activation
+const activateSubscription = async (
+  subscriptionId: string,
   formData: { email: string; name: string; goal: string }
 ) => {
   try {
     const response = await axios.post(
-      `${API_BASE_URL}/api/payment/capture-payment`,
+      `${API_BASE_URL}/api/payment/activate-subscription`,
       {
-        orderId,
+        subscriptionId,
         formData,
       }
     );
     return response.data;
   } catch (error) {
-    console.error("Error capturing payment:", error);
+    console.error("Error activating subscription:", error);
     throw error;
   }
 };
+
 const LandingPage = () => {
   const router = useRouter();
+
   const [formData, setFormData] = useState({
     email: "",
     name: "",
@@ -111,6 +92,40 @@ const LandingPage = () => {
     title: "",
     message: "",
   });
+
+  // Simulate subscription
+  // const testSubscription = async (formData) => {
+  //   try {
+  //     const response = await axios.post(
+  //       `${API_BASE_URL}/api/payment/simulate-subscription`,
+  //       { formData }
+  //     );
+
+  //     if (response.data.success) {
+  //       router.push(
+  //         `/success?dateTime=${response.data.subscription.nextMessageDate}`
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.error("Error in test subscription:", error);
+  //   }
+  // };
+
+  // Simulate subscription status update
+  // const testStatusUpdate = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       `${API_BASE_URL}/api/payment/simulate-subscription-update`,
+  //       {
+  //         subscriptionId: "TEST_SUB_123",
+  //         newStatus: "CANCELLED",
+  //       }
+  //     );
+  //     console.log(response.data);
+  //   } catch (error) {
+  //     console.error("Error updating subscription:", error);
+  //   }
+  // };
 
   const handleValidation = () => {
     const result = formSchema.safeParse(formData);
@@ -188,6 +203,14 @@ const LandingPage = () => {
     } else {
       alert("Please fill in all the fields to start your journey");
     }
+    // if (handleValidation()) {
+    //   // For testing, bypass PayPal
+    //   if (process.env.NEXT_PUBLIC_TEST_MODE === "true") {
+    //     testSubscription(formData);
+    //   } else {
+    //     setIsModalOpen(true);
+    //   }
+    // }
   };
 
   return (
@@ -195,7 +218,8 @@ const LandingPage = () => {
       options={{
         clientId:
           process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "default-client-id",
-        currency: "USD",
+        vault: true,
+        intent: "subscription",
       }}
     >
       <AnimatedLoaderOverlay isLoading={isLoading} />
@@ -358,36 +382,33 @@ Examples:
                   Complete Your Payment with PayPal
                 </h2>
                 <PayPalButtons
-                  createOrder={async () => {
-                    try {
-                      const { orderId } = await createPayment(
-                        2,
-                        "USD",
-                        "365 Days of Coaching"
-                      );
-                      return orderId;
-                    } catch (error) {
-                      console.error("Error creating order:", error);
-                      alert("Failed to create order. Please try again.");
-                    }
+                  style={{
+                    shape: "rect",
+                    color: "gold",
+                    layout: "vertical",
+                    label: "subscribe",
                   }}
-                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                  onApprove={async (data, actions) => {
+                  createSubscription={(data, actions) => {
+                    return actions.subscription.create({
+                      plan_id: PLAN_ID as string,
+                    });
+                  }}
+                  onApprove={async (data) => {
                     try {
-                      console.log("Order id::", data.orderID);
-                      const { capture } = await capturePayment(
-                        data.orderID,
+                      const result = await activateSubscription(
+                        data.subscriptionID as string,
                         formData
                       );
-                      // console.log("Payment successful:", capture);
-                      const dateTime = capture.nextMessageDate;
+                     if (result.data.success === true){
                       router.push(
-                        `/success?dateTime=${encodeURIComponent(dateTime)}`
+                        `/success?dateTime=${result.data.subscription.nextMessageDate}`
                       );
-                      // alert("Payment successful!");
+                     }
                     } catch (error) {
-                      console.error("Error capturing payment:", error);
-                      alert("Failed to capture payment. Please try again.");
+                      console.error("Error activating subscription:", error);
+                      alert(
+                        "Failed to activate subscription. Please try again."
+                      );
                     }
                   }}
                   onError={(err) => {
