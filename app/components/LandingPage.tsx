@@ -201,7 +201,7 @@ const LandingPage = () => {
       console.log("All required fields are filled::", formData);
       setIsModalOpen(true);
     } else {
-      alert("Please fill in all the fields to start your journey");
+      console.log("Please fill in all the fields to start your journey");
     }
     // if (handleValidation()) {
     //   // For testing, bypass PayPal
@@ -395,21 +395,22 @@ Examples:
                   }}
                   onApprove={async (data) => {
                     try {
+                      // eslint-disable-next-line @typescript-eslint/no-unused-vars
                       const result = await activateSubscription(
                         data.subscriptionID as string,
                         formData
                       );
-                     if (result.data.success === true){
-                      router.push(
-                        `/success?dateTime=${result.data.subscription.nextMessageDate}`
-                      );
-                     }
+                      if (result.data.success === true) {
+                        router.push(
+                          `/success?dateTime=${result.data.subscription.nextMessageDate}`
+                        );
+                      }
                     } catch (error) {
                       console.error("Error activating subscription:", error);
-                      alert(
-                        "Failed to activate subscription. Please try again."
-                      );
-                    }
+                      // alert(
+                      //   "Failed to activate subscription. Please try again."
+                      // );
+                    } 
                   }}
                   onError={(err) => {
                     console.error("PayPal Button error:", err);
