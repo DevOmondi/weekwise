@@ -46,26 +46,6 @@ const Modal = ({
   </div>
 );
 
-// Handle subscription activation
-const activateSubscription = async (
-  subscriptionId: string,
-  formData: { email: string; name: string; goal: string }
-) => {
-  try {
-    const response = await axios.post(
-      `${API_BASE_URL}/api/payment/activate-subscription`,
-      {
-        subscriptionId,
-        formData,
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error activating subscription:", error);
-    throw error;
-  }
-};
-
 const LandingPage = () => {
   const router = useRouter();
 
@@ -92,6 +72,32 @@ const LandingPage = () => {
     title: "",
     message: "",
   });
+
+  // Handle subscription activation
+  const activateSubscription = async (
+    subscriptionId: string,
+    formData: { email: string; name: string; goal: string }
+  ) => {
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/api/payment/activate-subscription`,
+        {
+          subscriptionId,
+          formData,
+        }
+      );
+
+      if (response.data.success) {
+        router.push(
+          `/success?dateTime=${response.data.subscription.nextMessageDate}`
+        );
+      }
+      return response.data;
+    } catch (error) {
+      console.error("Error activating subscription:", error);
+      throw error;
+    }
+  };
 
   // Simulate subscription
   // const testSubscription = async (formData) => {
@@ -400,17 +406,17 @@ Examples:
                         data.subscriptionID as string,
                         formData
                       );
-                      if (result.data.success === true) {
-                        router.push(
-                          `/success?dateTime=${result.data.subscription.nextMessageDate}`
-                        );
-                      }
+                      // if (result.data.success === true) {
+                      //   router.push(
+                      //     `/success?dateTime=${result.data.subscription.nextMessageDate}`
+                      //   );
+                      // }
                     } catch (error) {
                       console.error("Error activating subscription:", error);
                       // alert(
                       //   "Failed to activate subscription. Please try again."
                       // );
-                    } 
+                    }
                   }}
                   onError={(err) => {
                     console.error("PayPal Button error:", err);
