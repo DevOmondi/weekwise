@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
+import Image from "next/image";
 import "./globals.css";
 import AnalyticsProvider from "./providers/AnalyticsProvider";
 
@@ -47,11 +48,32 @@ export default function RootLayout({
             `,
           }}
         />
+
+        {/* Meta Pixel Code */}
+        <Script
+          strategy="afterInteractive"
+          src="https://connect.facebook.net/en_US/fbevents.js"
+          onLoad={() => {
+            if (window.fbq) {
+              window.fbq("init", "569722392465540");
+              window.fbq("track", "PageView");
+            }
+          }}
+        />
+        <noscript>
+          <Image
+            alt=""
+            height="1"
+            width="1"
+            style={{ display: "none" }}
+            src="https://www.facebook.com/tr?id=569722392465540&ev=PageView&noscript=1"
+          />
+        </noscript>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AnalyticsProvider/>
+        <AnalyticsProvider />
         {children}
       </body>
     </html>
