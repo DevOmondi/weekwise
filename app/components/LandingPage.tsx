@@ -364,7 +364,7 @@ Examples:
                   </div>
                   <div className="text-right">
                     <div className="text-2xl font-bold">$49/year</div>
-                    <div className="text-sm text-gray-600">one-time</div>
+                    {/* <div className="text-sm text-gray-600">one-time</div> */}
                   </div>
                 </div>
                 <Button
