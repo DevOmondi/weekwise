@@ -14,7 +14,7 @@ function SuccessContent() {
   const dateObj = dateTime ? new Date(dateTime) : null;
   const formattedDate = dateObj
     ? dateObj.toLocaleDateString(undefined, {
-        weekday: "long"
+        weekday: "long",
       })
     : null;
   const formattedTime = dateObj

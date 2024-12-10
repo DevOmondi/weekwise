@@ -53,11 +53,17 @@ export default function RootLayout({
         <Script
           strategy="afterInteractive"
           src="https://connect.facebook.net/en_US/fbevents.js"
-          onLoad={() => {
-            if (window.fbq) {
-              window.fbq("init", "569722392465540");
-              window.fbq("track", "PageView");
-            }
+        />
+        <Script
+          id="meta-pixel"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (window.fbq) {
+                window.fbq('init', '569722392465540');
+                window.fbq('track', 'PageView');
+              }
+            `,
           }}
         />
         <noscript>
