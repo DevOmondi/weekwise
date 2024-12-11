@@ -5,24 +5,20 @@ import Navbar from "./components/Navbar";
 import { useSearchParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Calendar, Sparkles } from "lucide-react";
+import { format, parseISO } from "date-fns";
 
 function SuccessContent() {
   const searchParams = useSearchParams();
   const dateTime = searchParams.get("dateTime");
 
-  // Parse and format dateTime if available
-  const dateObj = dateTime ? new Date(dateTime) : null;
-  const formattedDate = dateObj
-    ? dateObj.toLocaleDateString(undefined, {
-        weekday: "long",
-      })
-    : null;
-  const formattedTime = dateObj
-    ? dateObj.toLocaleTimeString(undefined, {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : null;
+ // Parse and format dateTime if available
+ const dateObj = dateTime ? parseISO(dateTime) : null;
+ const formattedDate = dateObj
+   ? format(dateObj, "EEEE")
+   : null;
+ const formattedTime = dateObj
+   ? format(dateObj, "h:mm a")
+   : null;
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.fbq) {
