@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import axios from "axios";
+import { purchase, initiateCheckout } from "@/lib/fpixel";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -88,6 +89,7 @@ const LandingPage = () => {
       );
 
       if (response.data.success) {
+        purchase()
         router.push(
           `/success?dateTime=${response.data.subscription.nextMessageDate}`
         );
@@ -395,6 +397,7 @@ Examples:
                     label: "subscribe",
                   }}
                   createSubscription={(data, actions) => {
+                    initiateCheckout()
                     return actions.subscription.create({
                       plan_id: PLAN_ID as string,
                     });
