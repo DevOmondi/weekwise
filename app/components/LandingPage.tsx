@@ -90,17 +90,17 @@ const LandingPage = () => {
 
       if (response.data.success) {
         // Track the purchase
-        await purchase();
+        purchase();
 
         // Track successful subscription with FB Pixel
-        if (typeof window !== "undefined" && window.fbq) {
-          window.fbq("track", "Purchase", {
-            currency: "USD",
-            value: 49,
-          });
+        // if (typeof window !== "undefined" && window.fbq) {
+        //   window.fbq("track", "Purchase", {
+        //     currency: "USD",
+        //     value: 49.00,
+        //   });
 
-          await new Promise((resolve) => setTimeout(resolve, 200));
-        }
+        //   await new Promise((resolve) => setTimeout(resolve, 200));
+        // }
 
         router.push(
           `/success?dateTime=${response.data.subscription.nextMessageDate}`

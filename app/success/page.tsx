@@ -27,7 +27,10 @@ function SuccessContent() {
   useEffect(() => {
     if (typeof window !== "undefined" && window.fbq) {
       window.fbq("track", "PageView");
-
+      window.fbq("track", "Purchase", {
+        value: 49.0,
+        currency: "USD",
+      });
       window.fbq("track", "CompleteRegistration", {
         status: "success",
         registration_id: dateTime,
