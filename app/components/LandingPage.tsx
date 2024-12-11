@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import axios from "axios";
-import { purchase, initiateCheckout } from "@/lib/fpixel";
+import { initiateCheckout } from "@/lib/fpixel";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -90,7 +90,7 @@ const LandingPage = () => {
 
       if (response.data.success) {
         // Track the purchase
-        purchase();
+        // purchase();
 
         // Track successful subscription with FB Pixel
         // if (typeof window !== "undefined" && window.fbq) {
