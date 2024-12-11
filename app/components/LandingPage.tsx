@@ -89,7 +89,19 @@ const LandingPage = () => {
       );
 
       if (response.data.success) {
-        purchase()
+        // Track the purchase
+        await purchase();
+
+        // Track successful subscription with FB Pixel
+        if (typeof window !== "undefined" && window.fbq) {
+          window.fbq("track", "Purchase", {
+            currency: "USD",
+            value: 49,
+          });
+
+          await new Promise((resolve) => setTimeout(resolve, 200));
+        }
+
         router.push(
           `/success?dateTime=${response.data.subscription.nextMessageDate}`
         );
@@ -294,10 +306,10 @@ const LandingPage = () => {
                 your first marathon - you &apos;re already thinking like a
                 runner. This week, let&apos;s focus on one small but mighty
                 habit. Try this: Before each run, take 30 seconds to visualize
-                yourself finishing strong. 127 other weekwise.me
-                members are working on running goals, and many find this mental
-                prep transformative. You&apos;re building something special
-                here. Your coach
+                yourself finishing strong. 127 other weekwise.me members are
+                working on running goals, and many find this mental prep
+                transformative. You&apos;re building something special here.
+                Your coach
               </div>
               <form className="space-y-4" onSubmit={handleSubmit}>
                 <div>
@@ -397,7 +409,7 @@ Examples:
                     label: "subscribe",
                   }}
                   createSubscription={(data, actions) => {
-                    initiateCheckout()
+                    initiateCheckout();
                     return actions.subscription.create({
                       plan_id: PLAN_ID as string,
                     });

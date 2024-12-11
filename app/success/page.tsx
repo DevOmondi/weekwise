@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import { useSearchParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
@@ -24,6 +24,16 @@ function SuccessContent() {
       })
     : null;
 
+    useEffect(() => {
+      if (typeof window !== "undefined" && window.fbq) {
+        window.fbq("track", "PageView");
+  
+        window.fbq("track", "CompleteRegistration", {
+          status: "success",
+          registration_id: dateTime,
+        });
+      }
+    }, [dateTime]);
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
@@ -85,9 +95,30 @@ function SuccessContent() {
   );
 }
 
+function LoadingContent() {
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center p-4">
+      <Card className="w-full max-w-md">
+        <CardContent className="p-8 text-center">
+          <div className="animate-pulse space-y-6">
+            <div className="h-16 w-16 bg-gray-200 rounded-full mx-auto" />
+            <div className="h-6 bg-gray-200 rounded w-3/4 mx-auto" />
+            <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto" />
+            <div className="space-y-3">
+              <div className="h-4 bg-gray-200 rounded" />
+              <div className="h-4 bg-gray-200 rounded" />
+              <div className="h-4 bg-gray-200 rounded" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
 export default function SuccessPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingContent/>}>
       <Navbar />
       <SuccessContent />
     </Suspense>
