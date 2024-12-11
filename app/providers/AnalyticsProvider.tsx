@@ -12,7 +12,8 @@ export default function AnalyticsProvider() {
         page_path: pathname,
       });
     }
-    if (typeof window.fbq !== "undefined") {
+    // Handle facebook pixel
+    if (typeof window !== "undefined" && window.fbq) {
       window.fbq("track", "PageView");
     }
   }, [pathname]);

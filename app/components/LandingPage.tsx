@@ -158,7 +158,7 @@ const LandingPage = () => {
     e.preventDefault();
 
     if (handleValidation()) {
-      console.log("Form data is valid:", formData);
+      // console.log("Form data is valid:", formData);
       setIsLoading(true);
       try {
         const response = await axios.post(
@@ -184,7 +184,7 @@ const LandingPage = () => {
           });
           setIsErrorModalOpen(true);
         }
-        console.log("Goal processed::", response.data.success);
+        // console.log("Goal processed::", response.data.success);
         if (response.status === 400) {
           return alert(response.data.message);
         }
@@ -204,10 +204,10 @@ const LandingPage = () => {
 
   const handleStartJourney = () => {
     if (handleValidation()) {
-      console.log("All required fields are filled::", formData);
+      // console.log("All required fields are filled::", formData);
       setIsModalOpen(true);
     } else {
-      console.log("Please fill in all the fields to start your journey");
+      // console.log("Please fill in all the fields to start your journey");
     }
     // if (handleValidation()) {
     //   // For testing, bypass PayPal
@@ -292,7 +292,7 @@ const LandingPage = () => {
                 your first marathon - you &apos;re already thinking like a
                 runner. This week, let&apos;s focus on one small but mighty
                 habit. Try this: Before each run, take 30 seconds to visualize
-                yourself finishing strong. {randomNumber} other weekwise.me
+                yourself finishing strong. 127 other weekwise.me
                 members are working on running goals, and many find this mental
                 prep transformative. You&apos;re building something special
                 here. Your coach
