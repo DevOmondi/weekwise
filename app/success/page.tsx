@@ -24,16 +24,16 @@ function SuccessContent() {
       })
     : null;
 
-    useEffect(() => {
-      if (typeof window !== "undefined" && window.fbq) {
-        window.fbq("track", "PageView");
-  
-        window.fbq("track", "CompleteRegistration", {
-          status: "success",
-          registration_id: dateTime,
-        });
-      }
-    }, [dateTime]);
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.fbq) {
+      window.fbq("track", "PageView");
+
+      window.fbq("track", "CompleteRegistration", {
+        status: "success",
+        registration_id: dateTime,
+      });
+    }
+  }, [dateTime]);
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
@@ -118,7 +118,7 @@ function LoadingContent() {
 
 export default function SuccessPage() {
   return (
-    <Suspense fallback={<LoadingContent/>}>
+    <Suspense fallback={<LoadingContent />}>
       <Navbar />
       <SuccessContent />
     </Suspense>
