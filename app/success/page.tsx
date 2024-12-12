@@ -1,9 +1,8 @@
 "use client";
 
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense } from "react";
 import Navbar from "./components/Navbar";
 import { useSearchParams } from "next/navigation";
-import { completeRegistration } from "@/lib/fpixel";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Calendar, Sparkles } from "lucide-react";
 import { format, parseISO } from "date-fns";
@@ -12,18 +11,11 @@ function SuccessContent() {
   const searchParams = useSearchParams();
   const dateTime = searchParams.get("dateTime");
 
- // Parse and format dateTime if available
- const dateObj = dateTime ? parseISO(dateTime) : null;
- const formattedDate = dateObj
-   ? format(dateObj, "EEEE")
-   : null;
- const formattedTime = dateObj
-   ? format(dateObj, "h:mm a")
-   : null;
+  // Parse and format dateTime if available
+  const dateObj = dateTime ? parseISO(dateTime) : null;
+  const formattedDate = dateObj ? format(dateObj, "EEEE") : null;
+  const formattedTime = dateObj ? format(dateObj, "h:mm a") : null;
 
-  useEffect(() => {
-    completeRegistration(dateTime);
-  }, [dateTime]);
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center p-4">
       <Card className="w-full max-w-md">

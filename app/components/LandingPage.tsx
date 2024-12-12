@@ -159,6 +159,7 @@ const LandingPage = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    e.stopPropagation();
     e.preventDefault();
     viewContent();
     if (handleValidation()) {
@@ -206,12 +207,13 @@ const LandingPage = () => {
     }
   };
 
-  const handleStartJourney = () => {
+  const handleStartJourney = (e: React.FormEvent) => {
+    e.stopPropagation();
     if (handleValidation()) {
       // console.log("All required fields are filled::", formData);
       setIsModalOpen(true);
     } else {
-      // console.log("Please fill in all the fields to start your journey");
+      console.log("Please fill in all the fields to start your journey");
     }
     initiateCheckout();
     // if (handleValidation()) {
@@ -223,9 +225,6 @@ const LandingPage = () => {
     //   }
     // }
   };
-  // useEffect(() => {
-  //   pageview()
-  // })
   return (
     <PayPalScriptProvider
       options={{

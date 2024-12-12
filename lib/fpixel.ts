@@ -40,12 +40,12 @@ export const initiateCheckout = debounce(() => {
   });
 }, 500);
 
-export const completeRegistration = debounce((dateTime) => {
-  trackEvent('CompleteRegistration', {
-    status: "success",
-    registration_id: dateTime,
-  });
-}, 500);
+// export const completeRegistration = debounce((dateTime) => {
+//   trackEvent('CompleteRegistration', {
+//     status: "success",
+//     registration_id: dateTime,
+//   });
+// }, 500);
 
 export const purchase = debounce(() => {
   trackEvent('Purchase', {
