@@ -12,10 +12,6 @@ export default function AnalyticsProvider() {
         page_path: pathname,
       });
     }
-    // Handle facebook pixel
-    if (typeof window !== "undefined" && window.fbq) {
-      window.fbq("track", "PageView");
-    }
   }, [pathname]);
 
   return null;

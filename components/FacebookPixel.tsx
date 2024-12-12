@@ -1,3 +1,5 @@
+'use client'
+
 import Script from 'next/script'
 import { FB_PIXEL_ID } from '@/lib/fpixel'
 
@@ -26,4 +28,4 @@ const FacebookPixel = () => {
   )
 }
 
-export default FacebookPixel
+export default FacebookPixel;

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import axios from "axios";
-import { initiateCheckout } from "@/lib/fpixel";
+import { viewContent, initiateCheckout, purchase } from "@/lib/fpixel";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -90,17 +90,7 @@ const LandingPage = () => {
 
       if (response.data.success) {
         // Track the purchase
-        // purchase();
-
-        // Track successful subscription with FB Pixel
-        // if (typeof window !== "undefined" && window.fbq) {
-        //   window.fbq("track", "Purchase", {
-        //     currency: "USD",
-        //     value: 49.00,
-        //   });
-
-        //   await new Promise((resolve) => setTimeout(resolve, 200));
-        // }
+        purchase();
 
         router.push(
           `/success?dateTime=${response.data.subscription.nextMessageDate}`
@@ -170,7 +160,7 @@ const LandingPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    viewContent();
     if (handleValidation()) {
       // console.log("Form data is valid:", formData);
       setIsLoading(true);
@@ -223,6 +213,7 @@ const LandingPage = () => {
     } else {
       // console.log("Please fill in all the fields to start your journey");
     }
+    initiateCheckout();
     // if (handleValidation()) {
     //   // For testing, bypass PayPal
     //   if (process.env.NEXT_PUBLIC_TEST_MODE === "true") {
@@ -232,7 +223,9 @@ const LandingPage = () => {
     //   }
     // }
   };
-
+  // useEffect(() => {
+  //   pageview()
+  // })
   return (
     <PayPalScriptProvider
       options={{
@@ -409,7 +402,6 @@ Examples:
                     label: "subscribe",
                   }}
                   createSubscription={(data, actions) => {
-                    initiateCheckout();
                     return actions.subscription.create({
                       plan_id: PLAN_ID as string,
                     });

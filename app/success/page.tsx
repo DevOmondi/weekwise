@@ -3,6 +3,7 @@
 import React, { Suspense, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import { useSearchParams } from "next/navigation";
+import { completeRegistration } from "@/lib/fpixel";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Calendar, Sparkles } from "lucide-react";
 import { format, parseISO } from "date-fns";
@@ -21,17 +22,7 @@ function SuccessContent() {
    : null;
 
   useEffect(() => {
-    if (typeof window !== "undefined" && window.fbq) {
-      window.fbq("track", "PageView");
-      window.fbq("track", "Purchase", {
-        value: 49.0,
-        currency: "USD",
-      });
-      window.fbq("track", "CompleteRegistration", {
-        status: "success",
-        registration_id: dateTime,
-      });
-    }
+    completeRegistration(dateTime);
   }, [dateTime]);
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center p-4">
